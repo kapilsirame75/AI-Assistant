@@ -1,0 +1,299 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | AI Personal Assistant{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h4 class="mb-3">Quick Access</h4>
+        
+        <!-- Tasks Overview -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Tasks</h5>
+            </div>
+            <div class="card-body p-0">
+                <ul id="sidebarTaskList" class="task-list">
+                    <li class="p-3 text-center text-muted">Loading tasks...</li>
+                </ul>
+            </div>
+            <div class="card-footer">
+                <button id="addTaskBtn" class="btn btn-sm btn-primary w-100">
+                    <i class="fas fa-plus mr-1"></i> Add Task
+                </button>
+            </div>
+        </div>
+        
+        <!-- Reminders Overview -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Reminders</h5>
+            </div>
+            <div class="card-body p-0">
+                <ul id="sidebarReminderList" class="reminder-list">
+                    <li class="p-3 text-center text-muted">Loading reminders...</li>
+                </ul>
+            </div>
+            <div class="card-footer">
+                <button id="addReminderBtn" class="btn btn-sm btn-primary w-100">
+                    <i class="fas fa-plus mr-1"></i> Add Reminder
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content Area -->
+    <div class="content-area">
+        <!-- Command Input -->
+        <div class="command-container">
+            <form id="commandForm" class="d-flex">
+                <input type="text" id="commandInput" class="command-input mr-2" 
+                       placeholder="Type a command (e.g., 'Remind me to call mom at 6pm')">
+                <button type="submit" id="commandSubmit" class="command-button">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+            
+            <!-- Quick Actions -->
+            <div class="quick-actions mt-2">
+                <button class="quick-action-btn" data-action="task">
+                    <i class="fas fa-tasks mr-1"></i> Add Task
+                </button>
+                <button class="quick-action-btn" data-action="reminder">
+                    <i class="fas fa-bell mr-1"></i> Set Reminder
+                </button>
+                <button class="quick-action-btn" data-action="weather">
+                    <i class="fas fa-cloud-sun mr-1"></i> Check Weather
+                </button>
+                <button class="quick-action-btn" data-action="news">
+                    <i class="fas fa-newspaper mr-1"></i> Get News
+                </button>
+                <button class="quick-action-btn" data-action="question">
+                    <i class="fas fa-question-circle mr-1"></i> Ask Question
+                </button>
+            </div>
+        </div>
+        
+        <!-- Chat Area -->
+        <div id="chatArea" class="mb-4" style="max-height: 400px; overflow-y: auto;">
+            <div class="card mb-3 fade-in">
+                <div class="card-header">
+                    <span class="font-weight-bold">Assistant</span>
+                    <small class="text-muted">{{ now.strftime('%I:%M %p') }}</small>
+                </div>
+                <div class="card-body">
+                    <p>Hello {{ current_user.username }}! I'm your AI assistant. How can I help you today?</p>
+                    <p>You can ask me to:</p>
+                    <ul>
+                        <li>Add tasks or reminders</li>
+                        <li>Answer questions</li>
+                        <li>Check the weather</li>
+                        <li>Get news updates</li>
+                        <li>Analyze uploaded files</li>
+                    </ul>
+                    <p>Try saying "Remind me to submit the project tomorrow at 6 PM" or "What's the weather like today?"</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Dashboard Sections -->
+        <div class="row">
+            <!-- Tasks Section -->
+            <div class="col-md-6 mb-4">
+                <div id="tasksSection" class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Tasks</h5>
+                        <button id="refreshTasksBtn" class="btn btn-sm btn-outline" title="Refresh tasks">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul id="taskList" class="task-list">
+                            <li class="p-3 text-center text-muted">Loading tasks...</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <button id="viewAllTasksBtn" class="btn btn-sm btn-outline w-100">
+                            View All Tasks
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Reminders Section -->
+            <div class="col-md-6 mb-4">
+                <div id="remindersSection" class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Reminders</h5>
+                        <button id="refreshRemindersBtn" class="btn btn-sm btn-outline" title="Refresh reminders">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul id="reminderList" class="reminder-list">
+                            <li class="p-3 text-center text-muted">Loading reminders...</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <button id="viewAllRemindersBtn" class="btn btn-sm btn-outline w-100">
+                            View All Reminders
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Weather Widget -->
+            <div class="col-md-6 mb-4">
+                <div id="weatherContainer" class="card">
+                    <div class="text-center p-3">
+                        <i class="fas fa-spinner fa-spin"></i> Loading weather...
+                    </div>
+                </div>
+            </div>
+            
+            <!-- News Widget -->
+            <div class="col-md-6 mb-4">
+                <div id="newsContainer" class="card">
+                    <div class="text-center p-3">
+                        <i class="fas fa-spinner fa-spin"></i> Loading news...
+                    </div>
+                </div>
+            </div>
+            
+            <!-- File Processing -->
+            <div class="col-md-12 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Upload & Process Files</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="fileUploadArea" class="file-upload-container mb-3">
+                            <div class="text-center">
+                                <i class="fas fa-file-upload fa-2x mb-2"></i>
+                                <p class="mb-0">Drag and drop a file here, or click to select</p>
+                                <p class="text-muted"><small>Supported formats: TXT, PDF</small></p>
+                            </div>
+                            <input type="file" id="fileUploadInput" class="file-upload-input" accept=".txt,.pdf">
+                        </div>
+                        
+                        <h6>Your Files:</h6>
+                        <div id="fileList">
+                            <div class="text-center text-muted">
+                                <i class="fas fa-spinner fa-spin"></i> Loading files...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Additional styles for dashboard layout */
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin: -10px;
+    }
+    
+    .col-md-6, .col-md-12 {
+        padding: 10px;
+        width: 100%;
+    }
+    
+    @media (min-width: 768px) {
+        .col-md-6 {
+            width: 50%;
+        }
+    }
+    
+    /* Fix for sidebar on mobile */
+    @media (max-width: 767px) {
+        .dashboard {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar {
+            order: 2;
+            margin-top: 20px;
+        }
+        
+        .content-area {
+            order: 1;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Set current time for templates
+    const now = new Date();
+    
+    // Initialize dashboard after page load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Copy tasks to sidebar
+        const taskListObserver = new MutationObserver(function(mutations) {
+            const taskList = document.getElementById('taskList');
+            const sidebarTaskList = document.getElementById('sidebarTaskList');
+            
+            if (taskList && sidebarTaskList && taskList.innerHTML !== '<li class="p-3 text-center text-muted">Loading tasks...</li>') {
+                // Copy first 3 tasks to sidebar
+                const tasks = taskList.querySelectorAll('.task-item');
+                sidebarTaskList.innerHTML = '';
+                
+                if (tasks.length === 0) {
+                    sidebarTaskList.innerHTML = '<li class="p-3 text-center text-muted">No tasks yet</li>';
+                } else {
+                    for (let i = 0; i < Math.min(3, tasks.length); i++) {
+                        const sidebarTask = tasks[i].cloneNode(true);
+                        // Simplify for sidebar display
+                        sidebarTask.innerHTML = `
+                            <input type="checkbox" class="task-checkbox" ${tasks[i].querySelector('.task-checkbox').checked ? 'checked' : ''}>
+                            <span class="task-title ${tasks[i].querySelector('.task-title').classList.contains('task-completed') ? 'task-completed' : ''}">${tasks[i].querySelector('.task-title').textContent}</span>
+                        `;
+                        sidebarTaskList.appendChild(sidebarTask);
+                    }
+                }
+                
+                taskListObserver.disconnect();
+            }
+        });
+        
+        taskListObserver.observe(document.body, { childList: true, subtree: true });
+        
+        // Copy reminders to sidebar
+        const reminderListObserver = new MutationObserver(function(mutations) {
+            const reminderList = document.getElementById('reminderList');
+            const sidebarReminderList = document.getElementById('sidebarReminderList');
+            
+            if (reminderList && sidebarReminderList && reminderList.innerHTML !== '<li class="p-3 text-center text-muted">Loading reminders...</li>') {
+                // Copy first 3 reminders to sidebar
+                const reminders = reminderList.querySelectorAll('.reminder-item');
+                sidebarReminderList.innerHTML = '';
+                
+                if (reminders.length === 0) {
+                    sidebarReminderList.innerHTML = '<li class="p-3 text-center text-muted">No reminders yet</li>';
+                } else {
+                    for (let i = 0; i < Math.min(3, reminders.length); i++) {
+                        const sidebarReminder = reminders[i].cloneNode(true);
+                        // Simplify for sidebar display
+                        sidebarReminder.innerHTML = `
+                            <span class="reminder-title">${reminders[i].querySelector('.reminder-title').textContent}</span>
+                            <span class="reminder-time">${reminders[i].querySelector('.reminder-time').textContent}</span>
+                        `;
+                        sidebarReminderList.appendChild(sidebarReminder);
+                    }
+                }
+                
+                reminderListObserver.disconnect();
+            }
+        });
+        
+        reminderListObserver.observe(document.body, { childList: true, subtree: true });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Login | AI Personal Assistant{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <h2 class="auth-title">Log In</h2>
+    
+    <div class="auth-form">
+        <form method="POST" action="{{ url_for('login') }}">
+            <div class="form-group">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" id="username" name="username" class="form-control" required autofocus>
+            </div>
+            
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary w-100">Log In</button>
+            </div>
+        </form>
+    </div>
+    
+    <p class="auth-redirect mt-3">
+        Don't have an account? <a href="{{ url_for('register') }}">Register here</a>
+    </p>
+</div>
+
+<style>
+    /* Hide header and footer on auth pages */
+    .header, .footer {
+        display: none;
+    }
+    
+    .main-content {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px 0;
+    }
+    
+    /* Background pattern */
+    body {
+        background: linear-gradient(135deg, var(--background-color) 25%, transparent 25%) -50px 0,
+                    linear-gradient(225deg, var(--background-color) 25%, transparent 25%) -50px 0,
+                    linear-gradient(315deg, var(--background-color) 25%, transparent 25%),
+                    linear-gradient(45deg, var(--background-color) 25%, transparent 25%);
+        background-size: 100px 100px;
+        background-color: #f5f7fa;
+    }
+    
+    /* Card styling */
+    .auth-form {
+        box-shadow: var(--shadow-lg);
+        border-radius: var(--border-radius-lg);
+    }
+    
+    .auth-title {
+        color: var(--primary-color);
+    }
+</style>
+{% endblock %}

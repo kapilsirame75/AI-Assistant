@@ -1,0 +1,111 @@
+🧠 Project: AI-Powered Personal Assistant Web App
+🎯 Goal
+Build a browser-based assistant (like Google Assistant or Siri) that helps users:
+
+Schedule tasks & reminders
+
+Manage to-do lists
+
+Answer natural language questions
+
+Provide weather/news updates
+
+Automate small routines
+
+Open and search through files/emails (locally or with mock data)
+
+🔧 Tech Stack (All Free & Open Source)
+
+Layer	Tech	Why
+Frontend	React.js + Tailwind CSS	Fast UI with modern design
+Backend	Python (FastAPI)	Lightweight & async-friendly backend
+AI/NLP	Open-source LLMs (like transformers, llama-cpp, gpt4all)	Offline or local model support
+Database	SQLite (or PostgreSQL if scaling)	Lightweight, zero-config
+Scheduler	Celery + Redis (optional)	For background tasks like reminders
+Auth	JWT (JSON Web Token)	Stateless, secure authentication
+Deployment	Render / Railway / Fly.io (free tiers)	Free hosting options
+🔄 Workflow (Step-by-Step with Feature Explanation)
+1. User Interface (React.js)
+Clean dashboard with:
+
+Input bar (text-based commands)
+
+Quick buttons (add task, set reminder, ask something)
+
+History of interactions
+
+2. Command Processing Pipeline
+Input: “Remind me to submit the project tomorrow at 6 PM”
+
+→ NLP Module (Local LLM or rule-based parsing)
+
+→ Intent Detection (Add Reminder)
+
+→ DateTime Parser (use dateparser, parsedatetime)
+
+→ Save to DB + Trigger background job
+
+3. To-do & Task Management
+CRUD APIs:
+
+/tasks/create, /tasks/update, etc.
+
+User tasks stored with status, deadline
+
+Filter by date, completed/pending
+
+4. Reminders & Notifications
+Reminders scheduled with Celery (can simulate with JS pop-ups or browser notifications)
+
+Local notification: Use Notification API in browser
+
+Fallback: Just simulate “Reminder Due!” when user logs in
+
+5. AI-Powered Question Answering
+Integrate local models (like gpt4all, llama-cpp, or Hugging Face’s bert-base-qa)
+
+Answer general questions, summaries
+
+Option: Let user upload a PDF or paste a text → Ask questions on it
+
+6. News & Weather
+Use free APIs like:
+
+https://gnews.io/ (for news, has free tier)
+
+wttr.in (text-based weather)
+
+No registration needed, just fetch JSON
+
+7. Local File Interaction (Optional, Simulated)
+Allow user to upload a .txt or .pdf → Parse using PyMuPDF, pdfplumber
+
+Let user ask: “Summarize the uploaded document”
+
+📦 Final Feature Set (Version 1 MVP)
+
+Feature	Description
+✅ Natural language command bar	User types commands like “Remind me...”
+✅ To-do and reminder system	With local notifications
+✅ AI Q&A	Local model answers queries or summaries
+✅ File Q&A	Upload and chat with files
+✅ News & Weather fetch	From public APIs
+✅ User Authentication	With JWT
+✅ Fully Open Source	Can host anywhere (Render, Railway, Fly.io)
+🔄 Development Plan (30 Days)
+
+Week	Goals
+1️⃣	Setup frontend (React UI) + backend (FastAPI) with routing
+2️⃣	Build task/reminder system with local notification
+3️⃣	Integrate local AI model for Q&A + file upload
+4️⃣	Polish UI, add auth, deploy on free hosting
+✅ Final Notes
+Offline-friendly: You can run this even locally.
+
+Expandable: Later add voice commands (Web Speech API), calendar integrations (Google Calendar).
+
+Free: No paid APIs or hardware needed.
+
+Real-world use case: Students, developers, anyone can use this daily.
+
+Product Potential: Target productivity users, freelancers, developers.
